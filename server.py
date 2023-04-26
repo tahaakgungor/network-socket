@@ -19,8 +19,8 @@ async def command(sid, data):
     print("command ", data)
     print("message ", data['command'])
     output = ""
-
- 
+    print("command ", data['deviceId'])
+    
     output= connections[data['deviceId']].send_config_set(data['command'], exit_config_mode=False)
 
     await sio.emit('output'+data['deviceId'],output, room=sid)
