@@ -1,0 +1,4 @@
+aiohttp
+requests
+netmiko
+python-socketio[asyncio]
