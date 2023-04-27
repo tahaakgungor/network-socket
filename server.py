@@ -3,6 +3,8 @@ import socketio
 import requests
 from netmiko import ConnectHandler
 from getpass import getpass
+import os
+PORT = int(os.environ.get("PORT", 5000))
 
 sio = socketio.AsyncServer(cors_allowed_origins='*')
 app = web.Application()
@@ -80,4 +82,4 @@ def disconnect(sid):
     print('disconnect ', sid)
 
 if __name__ == '__main__':
-    web.run_app(app, port=3002)
+    web.run_app(app, port=PORT)
