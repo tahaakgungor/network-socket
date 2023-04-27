@@ -4,7 +4,7 @@ import requests
 from netmiko import ConnectHandler
 from getpass import getpass
 import os
-PORT = int(os.environ.get("PORT", 5000))
+PORT = int(os.environ.get("PORT", 3005))
 
 sio = socketio.AsyncServer(cors_allowed_origins='*')
 app = web.Application()
