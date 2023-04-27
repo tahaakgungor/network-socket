@@ -4,7 +4,7 @@ import requests
 from netmiko import ConnectHandler
 from getpass import getpass
 
-sio = socketio.AsyncServer(cors_allowed_origins='http://localhost:3000')
+sio = socketio.AsyncServer(cors_allowed_origins='https://network-automation-d31c2.web.app')
 app = web.Application()
 sio.attach(app)
 
@@ -44,7 +44,7 @@ async def createSSH(sid, data):
     devList = []
     for i,device in enumerate(data):
         print("DEV ", device, "i ", i)
-        req = requests.get('http://localhost:5000/devices/selected/'+device)
+        req = requests.get('https://network-server.herokuapp.com/devices/selected/'+device)
         req = req.json()
         req[0].pop('_id')
         req[0].pop('name')
