@@ -22,15 +22,22 @@ async def command(sid, data):
     print("message ", data['command'])
     output = ""
     print("command ", data['deviceId'])
-    
-    output= connections[data['deviceId']].send_config_set(data['command'], exit_config_mode=False)
+
+ 
+    output= connections[data['deviceId']].send_command(data['command'])
+
+
+
 
     await sio.emit('output'+data['deviceId'],output, room=sid)
+    
 
     print("outtt:", output, "data: ", data['deviceId'])
+    output = ""
+
 
     
-    # response = connections[data['deviceId'][0][0]].send_command(data['command'])
+    # response = connections[data['deviceId'][0][0]].send_command(data['command'])asd
     # connections[data['deviceId'][0][0]].enable()
     # print("response: ", response)
     # output= connections[data['deviceId'][0][0]].send_config_set(data['command'])
@@ -56,6 +63,7 @@ async def createSSH(sid, data):
         net_connect = ConnectHandler(**devList[i][0], timeout=10)
         net_connect.enable()
         connections[data[i]] = net_connect
+      
     print("DEVLIST: ", devList)
     print("createSSH ", connections)
 
