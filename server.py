@@ -17,6 +17,25 @@ def connect(sid, environ):
     print("connect ", sid)
 
 @sio.event
+async def privateCommand(sid,data):
+    print("privateCommand ", data)
+    print("message ", data)
+    output = ""
+    print("command ", data['deviceId'])
+
+ 
+    output= connections[data['deviceId']].send_command(data)
+
+
+
+
+    await sio.emit('output'+data['deviceId'],output, room=sid)
+    
+
+    print("outtt:", output, "data: ", data['deviceId'])
+    output = ""
+
+@sio.event
 async def command(sid, data):
     print("command ", data)
     print("message ", data['command'])
@@ -87,7 +106,7 @@ async def createSSH(sid, data):
 
 @sio.event
 def disconnect(sid):
-    print('disconnect ', sid)
+    print('disconnect ', sid)   
 
 if __name__ == '__main__':
     web.run_app(app, port=PORT)
