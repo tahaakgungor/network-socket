@@ -72,7 +72,7 @@ async def createSSH(sid, data):
     devList = []
     for i,device in enumerate(data):
         print("DEV ", device, "i ", i)
-        req = requests.get('https://network-automation.herokuapp.com/devices/selected/'+device)
+        req = requests.get('http://localhost:5001/devices/selected/'+device)
         req = req.json()
         req[0].pop('_id')
         req[0].pop('name')
