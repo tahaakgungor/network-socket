@@ -19,20 +19,21 @@ def connect(sid, environ):
 @sio.event
 async def privateCommand(sid,data):
     print("privateCommand ", data)
-    print("message ", data)
+    print("dev ", data['devices'])
     output = ""
-    print("command ", data['deviceId'])
-
+    print("command ", data)
+    print("conn",connections[data['devices']])
  
-    output= connections[data['deviceId']].send_command(data)
+    output= connections[data['devices']].send_config_set(data['command'],enter_config_mode=False, exit_config_mode=False,error_pattern=r'% Invalid input detected at')
+
+    connect
 
 
 
-
-    await sio.emit('output'+data['deviceId'],output, room=sid)
+    await sio.emit('output'+data['devices'],output, room=sid)
     
 
-    print("outtt:", output, "data: ", data['deviceId'])
+    print("outtt:", output, "data: ", data['devices'])
     output = ""
 
 @sio.event
@@ -43,7 +44,7 @@ async def command(sid, data):
     print("command ", data['deviceId'])
 
  
-    output= connections[data['deviceId']].send_command(data['command'])
+    output= connections[data['deviceId']].send_config_set(data['command'],enter_config_mode=False, exit_config_mode=False,error_pattern=r'% Invalid input detected at')
 
 
 
@@ -81,6 +82,8 @@ async def createSSH(sid, data):
         print("DEVLIST: ", devList)
         net_connect = ConnectHandler(**devList[i][0], timeout=10)
         net_connect.enable()
+     
+     
         connections[data[i]] = net_connect
       
     print("DEVLIST: ", devList)
