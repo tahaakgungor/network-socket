@@ -105,6 +105,12 @@ async def createSSH(sid, data):
     # out2=connections[data[0][0]].send_command('sh run')
 
 
+@sio.event
+def disconnectSSH(sid, data):
+    print("disconnectSSH ", data)
+    connections[data].disconnect()
+    connections.pop(data, None)
+    print("disconnectSSH ", connections)
 
 
 @sio.event
