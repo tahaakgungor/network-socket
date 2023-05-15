@@ -1,4 +1,5 @@
 from aiohttp import web
+import netmiko
 import socketio
 import requests
 from netmiko import ConnectHandler
@@ -24,10 +25,14 @@ async def privateCommand(sid,data):
     print("command ", data)
     print("conn",connections[data['devices']])
  
-    output= connections[data['devices']].send_config_set(data['command'],enter_config_mode=False, exit_config_mode=False,error_pattern=r'% Invalid input detected at')
+    try:
+        output = connections[data['devices']].send_config_set(data['command'], enter_config_mode=False, exit_config_mode=False, error_pattern=r'% Invalid input detected at')
 
-    connect
-
+        if output == "":
+            output = 'Invalid command'
+    except netmiko.exceptions.ConfigInvalidException as e:
+        output = f"\n{str(e)}\n" 
+   
 
 
     await sio.emit('output'+data['devices'],output, room=sid)
@@ -43,9 +48,15 @@ async def command(sid, data):
     output = ""
     print("command ", data['deviceId'])
 
- 
-    output= connections[data['deviceId']].send_config_set(data['command'],enter_config_mode=False, exit_config_mode=False,error_pattern=r'% Invalid input detected at')
 
+
+    try:
+        output = connections[data['deviceId']].send_config_set(data['command'],cmd_verify=True, enter_config_mode=False, exit_config_mode=False, error_pattern=r'% Invalid input detected at')
+
+        
+       
+    except netmiko.exceptions.ConfigInvalidException as e:
+        output = f"\n{str(e)}\n" 
 
 
 
@@ -82,6 +93,8 @@ async def createSSH(sid, data):
         print("DEVLIST: ", devList)
         net_connect = ConnectHandler(**devList[i][0], timeout=10)
         net_connect.enable()
+
+    
      
      
         connections[data[i]] = net_connect
